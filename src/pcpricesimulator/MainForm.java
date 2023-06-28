@@ -448,7 +448,7 @@ public class MainForm extends javax.swing.JFrame {
         Double powerSupply = Components.powerSupplyList.get(cbPowerSupply.getSelectedItem());
         Double storage = Components.storageList.get(cbStorage.getSelectedItem());
         
-        if(cpu == null || cpuCooler == null || case1 == null || graphicsCard == null || memory == null || monitor == null || motherboard == null || powerSupply == null || storage == null){
+        if(cpu == 0d || cpuCooler == 0d || case1 == 0d || graphicsCard == 0d || memory == 0d || monitor == 0d || motherboard == 0d || powerSupply == 0d || storage == 0d){
             showMessageDialog(null, "Please select all your components!");
         } else {
             Double total = cpu + cpuCooler + case1 + graphicsCard + memory + monitor + motherboard + powerSupply + storage;
