@@ -148,12 +148,12 @@ public class RegisterForm extends javax.swing.JFrame {
                 
         }
         if(doesExist){
-                showMessageDialog(null, "username already created");
+                showMessageDialog(null, "username already exist!");
                 tfPassword.setText("");
                 tfUsername.setText("");
         } else {
-            if(password.equals("")){
-                showMessageDialog(null, "Password tidak boleh kosong!");
+            if(password.equals("") || username.equalsIgnoreCase("")){
+                showMessageDialog(null, "username or password can't be empty!");
                 
             } else {
                 new User(username, password);

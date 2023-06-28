@@ -278,9 +278,9 @@ public class LoginForm extends javax.swing.JFrame {
         
         // MAKING USER TESTER
         User.clearUserList();
-        new User("jegal", "224466");
+        new User("kaela", "224466");
         new User("gazel", "664422");
-        new User("bebek", "242466");
+        new User("yopi", "242466");
         User.showUserList();
         
         
