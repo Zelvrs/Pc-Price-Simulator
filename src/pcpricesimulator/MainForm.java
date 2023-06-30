@@ -4,11 +4,18 @@ package pcpricesimulator;
 import java.awt.Component;
 import java.awt.Image;
 import static java.lang.String.format;
+import java.sql.Statement;
 import javax.swing.ImageIcon;
 import java.util.HashMap;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.SwingConstants;
+import static pcpricesimulator.LoginForm.createStatement;
 
 
 /*
@@ -449,6 +456,7 @@ public class MainForm extends javax.swing.JFrame {
         Double storage = Components.storageList.get(cbStorage.getSelectedItem());
         
         if(cpu == 0d || cpuCooler == 0d || case1 == 0d || graphicsCard == 0d || memory == 0d || monitor == 0d || motherboard == 0d || powerSupply == 0d || storage == 0d){
+            btnSetWishList.setEnabled(false);
             showMessageDialog(null, "Please select all your components!");
         } else {
             Double total = cpu + cpuCooler + case1 + graphicsCard + memory + monitor + motherboard + powerSupply + storage;
@@ -462,6 +470,7 @@ public class MainForm extends javax.swing.JFrame {
     private void btnSetWishListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSetWishListActionPerformed
         // TODO add your handling code here:
         User currentUser = LoginForm.currentUser;
+        Statement statement = createStatement();
 
         
         
@@ -476,9 +485,15 @@ public class MainForm extends javax.swing.JFrame {
         String powerSupply = (String) cbPowerSupply.getSelectedItem();
         String storage = (String) cbStorage.getSelectedItem();
         
+        try {
+            statement.executeUpdate("UPDATE users SET cpu = \""+cpu+"\", cpu_cooler = \""+cpuCooler+"\", motherboard = \""+motherboard+"\", memory = \""+memory+"\", storage = \""+storage+"\", graphics_card = \""+graphicsCard+"\", cases = \""+case1+"\", power_supply = \""+powerSupply+"\", monitor = \""+monitor+"\", total = \""+MainForm.currentPrice+"\" WHERE name = \""+currentUser.getName()+"\";");
+        } catch (SQLException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         
         currentUser.setUserComponents(cpu, cpuCooler, motherboard, memory, storage, graphicsCard, case1, powerSupply, monitor, MainForm.currentPrice);
-                
+          
         cbCPU.setSelectedItem("<Default>");
         cbCPUCooler.setSelectedItem("<Default>");
         cbMotherboard.setSelectedItem("<Default>");

@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -25,7 +27,6 @@ public class LoginForm extends javax.swing.JFrame {
     public static RegisterForm registerForm;
     public static MainForm mainForm;
     public static User currentUser;
-    public static ResultSet resultSet;
     public UserWishlistForm userWishlistForm;
 
     //new User("jegal", "224466");
@@ -171,7 +172,8 @@ public class LoginForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         String username = tfUsername.getText();
         String password = String.valueOf(tfPassword.getPassword());
-
+        Statement statement = createStatement();
+        
         boolean doesExist = false;
         for(User c: User.getUserList()){
             
@@ -183,11 +185,31 @@ public class LoginForm extends javax.swing.JFrame {
                     mainForm = new MainForm(currentUser.getName());
                    
                     
-                    if (currentUser.getUserWishlistForm() == null){
-                        currentUser.setUserWishlistForm(new UserWishlistForm(currentUser.getName()));
-                    } else {
-                        currentUser.setUserWishlistForm(currentUser.getUserWishlistForm());
+                    
+                    
+                    try {
+                        ResultSet wishlistSet = statement.executeQuery("SELECT name, cpu, cpu_cooler, motherboard, memory, storage, graphics_card, cases, power_supply, monitor, total from users;");
+                        // System.out.println(wishlistSet.getString(1));
+                        while(wishlistSet.next()){
+                            if(wishlistSet.getString(1).equalsIgnoreCase(currentUser.getName())){
+                                currentUser.setUserWishlistForm(new UserWishlistForm(wishlistSet.getString(2), 
+                                                                                wishlistSet.getString(3),
+                                                                                wishlistSet.getString(4),
+                                                                                wishlistSet.getString(5),
+                                                                                wishlistSet.getString(6),
+                                                                                wishlistSet.getString(7),
+                                                                                wishlistSet.getString(8),
+                                                                                wishlistSet.getString(9),
+                                                                                wishlistSet.getString(10),
+                                                                                wishlistSet.getDouble(11)));
+                            }
+                            
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    
+                    
                     mainForm.setVisible(true);
                     tfPassword.setText("");
                     tfUsername.setText("");
@@ -242,87 +264,79 @@ public class LoginForm extends javax.swing.JFrame {
         //</editor-fold>
         
         
+
+        
         //      ALL THIS CODE MADE BY GAZEL AVERROUS
         Statement statement = createStatement();
-        resultSet = statement.executeQuery("select * from users");
-
-        while (resultSet.next()){
-            new User(resultSet.getString(1), resultSet.getString(2));
-            //System.out.print(resultSet.getString(1) + " " + resultSet.getString(2));
-        }
         
         // ADDING ALL ITEM TO THE LIST
         Components.cpuList.put("<Default>", 0d);
-        Components.cpuList.put("AMD Ryzen 9", 1_600_000d);
-        Components.cpuList.put("Intel core i9", 1_500_000d);
-        Components.cpuList.put("AMD Ryzen 8", 1_100_000d);
-        Components.cpuList.put("Intel core i7", 1_900_000d);
-        
         Components.cpuCoolerList.put("<Default>", 0d);
-        Components.cpuCoolerList.put("Cooler Master Hyper 212 EVO", 750_000d);
-        Components.cpuCoolerList.put("Cooler Master Hyper H412R CPU", 400_000d);
-        Components.cpuCoolerList.put("Cooler Master Hyper T20", 850_000d);
-        Components.cpuCoolerList.put("Cooler Master Hyper 212 Halo White", 900_000d);
-        
         Components.motherboardList.put("<Default>", 0d);
-        Components.motherboardList.put("ASRock MB TRX40 Creator AMD Ryzen", 22_900_000d);
-        Components.motherboardList.put("ASUS ROG Zenith II Extreme Alpha TRX40", 8_050_000d);
-        Components.motherboardList.put("Asus ROG Strix TRX40-E Gaming AMD", 3_400_000d);
-        Components.motherboardList.put("GIGABYTE TRX40 AORUS Master", 12_900_000d);
-        
         Components.memoryList.put("<Default>", 0d);
-        Components.memoryList.put("Corsair Vengeance LPX 16 GB", 700_000d);
-        Components.memoryList.put("G.Skill Ripjaws V 32 GB", 900_000d);
-        Components.memoryList.put("TEAMGROUP T-Force Vulcan Z 32 GB", 800_000d);
-        Components.memoryList.put("Corsair Vengeance RGB Pro 32 GB", 1_900_000d);
-        
         Components.storageList.put("<Default>", 0d);
-        Components.storageList.put("Samsung 970 Evo Plus", 899_000d);
-        Components.storageList.put("Western Digital Black SN770", 700_000d);
-        Components.storageList.put("Samsung 870 Evo", 750_000d);
-        Components.storageList.put("Crucial P3 Plus", 1_300_000d);
-        
         Components.graphicsCardList.put("<Default>", 0d);
-        Components.graphicsCardList.put("MSI GeForce RTX 3060 Ventus 2X 12G", 4_200_000d);
-        Components.graphicsCardList.put("Asus TUF GAMING", 12_100_000d);
-        Components.graphicsCardList.put("Asus ROG STRIX GAMING OC", 29_950_000d);
-        Components.graphicsCardList.put("MSI MECH 2X OC", 9_000_000d);
-        
         Components.caseList.put("<Default>", 0d);
-        Components.caseList.put("Corsair 4000D Airflow", 1_500_000d);
-        Components.caseList.put("NZXT H5 Flow", 1_770_000d);
-        Components.caseList.put("Lian Li O11 Dynamic EVO", 2_250_000d);
-        Components.caseList.put("Phanteks Eclipse G360A", 1_900_000d);
-        
         Components.powerSupplyList.put("<Default>", 0d);
-        Components.powerSupplyList.put("Corsair RM850x (2021)", 1_900_000d);
-        Components.powerSupplyList.put("Thermaltake Toughpower GX2", 3_270_000d);
-        Components.powerSupplyList.put("EVGA 700 GD", 4_350_000d);
-        Components.powerSupplyList.put("Cooler Master MWE Gold 850", 2_400_000d);
-        
         Components.monitorList.put("<Default>", 0d);
-        Components.monitorList.put(" Asus TUF Gaming VG27AQ", 4_500_000d);
-        Components.monitorList.put("Asus VG248QG", 2_920_000d);
-        Components.monitorList.put("Gigabyte M27Q", 4_150_000d);
-        Components.monitorList.put("Samsung Odyssey G7", 7_100_000d);
+
         
+        
+        ResultSet cpuSet = statement.executeQuery("select * from cpu");
+         while (cpuSet.next()){
+            Components.cpuList.put(cpuSet.getString(1), cpuSet.getDouble(2));
+        }      
+        ResultSet cpuCoolerSet = statement.executeQuery("select * from cpu_cooler");
+        while (cpuCoolerSet.next()){
+            Components.cpuCoolerList.put(cpuCoolerSet.getString(1), cpuCoolerSet.getDouble(2));
+        }
+        ResultSet motherboardSet = statement.executeQuery("select * from motherboard");
+        while (motherboardSet.next()){
+            Components.motherboardList.put(motherboardSet.getString(1), motherboardSet.getDouble(2));
+        }
+        ResultSet memorySet = statement.executeQuery("select * from memory");
+        while (memorySet.next()){
+            Components.memoryList.put(memorySet.getString(1), memorySet.getDouble(2));
+        }
+        ResultSet storageSet = statement.executeQuery("select * from storage");
+        while (storageSet.next()){
+            Components.storageList.put(storageSet.getString(1), storageSet.getDouble(2));
+        }
+        ResultSet graphicsCardSet = statement.executeQuery("select * from graphics_card");
+        while (graphicsCardSet.next()){
+            Components.graphicsCardList.put(graphicsCardSet.getString(1), graphicsCardSet.getDouble(2));
+        }
+        ResultSet caseSet = statement.executeQuery("select * from cases");
+        while (caseSet.next()){
+            Components.caseList.put(caseSet.getString(1), caseSet.getDouble(2));
+        }
+        ResultSet powerSupplySet = statement.executeQuery("select * from power_supply");
+        while (powerSupplySet.next()){
+            Components.powerSupplyList.put(powerSupplySet.getString(1), powerSupplySet.getDouble(2));
+        }
+        ResultSet monitorSet = statement.executeQuery("select * from monitor");
+        while (monitorSet.next()){
+            Components.monitorList.put(monitorSet.getString(1), monitorSet.getDouble(2));
+        }
         
         
         // MAKING ALL FORMS
         loginForm = new LoginForm();
         registerForm = new RegisterForm();
         
-        // MAKING USER TESTER
-        //User.clearUserList();
-        // new User("kaela", "224466");
-        // new User("gazel", "664422");
-        // new User("yopi", "242466");
+        // IMPORT ALL USER FROM DATABASE
+        //User.clearUserList();   
+        ResultSet userSet = statement.executeQuery("select * from users");
+        while (userSet.next()){
+            new User(userSet.getString(1), userSet.getString(2));
+            //System.out.print(resultSet.getString(1) + " " + resultSet.getString(2));
+        }
         User.showUserList();
         
         
         
 
-        
+            
 
         //</editor-fold>
         //</editor-fold>

@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import static javax.swing.JOptionPane.showMessageDialog;
 import static pcpricesimulator.LoginForm.createStatement;
-import static pcpricesimulator.LoginForm.resultSet;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
