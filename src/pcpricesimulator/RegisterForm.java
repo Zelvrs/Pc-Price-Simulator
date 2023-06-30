@@ -1,8 +1,14 @@
 package pcpricesimulator;
 
 
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import static javax.swing.JOptionPane.showMessageDialog;
+import static pcpricesimulator.LoginForm.createStatement;
+import static pcpricesimulator.LoginForm.resultSet;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -156,6 +162,14 @@ public class RegisterForm extends javax.swing.JFrame {
                 showMessageDialog(null, "username or password can't be empty!");
                 
             } else {
+                // resultSet = statement.executeQuery("select * from users");
+                Statement statement = createStatement();
+                try {
+                    statement.executeUpdate("INSERT INTO users(name, password) values(\""+username+"\", \""+password+"\")");
+                } catch (SQLException ex) {
+                    Logger.getLogger(RegisterForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
                 new User(username, password);
                 LoginForm.loginForm.setVisible(true);
                 LoginForm.registerForm.setVisible(false);

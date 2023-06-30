@@ -4,6 +4,11 @@ package pcpricesimulator;
 import javax.swing.ImageIcon;
 import java.util.HashMap;
 import static javax.swing.JOptionPane.showMessageDialog;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -20,6 +25,7 @@ public class LoginForm extends javax.swing.JFrame {
     public static RegisterForm registerForm;
     public static MainForm mainForm;
     public static User currentUser;
+    public static ResultSet resultSet;
     public UserWishlistForm userWishlistForm;
 
     //new User("jegal", "224466");
@@ -29,6 +35,29 @@ public class LoginForm extends javax.swing.JFrame {
     public LoginForm() {
         initComponents();
         
+    }
+    
+    public static Statement createStatement(){
+        String url = "jdbc:mysql://localhost:3306/pc_price_simulator";
+        String username = "root";
+        String password = "ligma";
+
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+
+            Connection Connection = DriverManager.getConnection(url , username, password);
+
+            Statement statement = Connection.createStatement();
+            
+            return statement;
+            
+            
+            // resultSet = statement.executeQuery("select * from barang");
+
+        } catch(Exception e){
+            System.out.println(e);
+            return null;
+        }      
     }
 
     /**
@@ -188,7 +217,7 @@ public class LoginForm extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws SQLException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -214,6 +243,13 @@ public class LoginForm extends javax.swing.JFrame {
         
         
         //      ALL THIS CODE MADE BY GAZEL AVERROUS
+        Statement statement = createStatement();
+        resultSet = statement.executeQuery("select * from users");
+
+        while (resultSet.next()){
+            new User(resultSet.getString(1), resultSet.getString(2));
+            //System.out.print(resultSet.getString(1) + " " + resultSet.getString(2));
+        }
         
         // ADDING ALL ITEM TO THE LIST
         Components.cpuList.put("<Default>", 0d);
@@ -277,10 +313,10 @@ public class LoginForm extends javax.swing.JFrame {
         registerForm = new RegisterForm();
         
         // MAKING USER TESTER
-        User.clearUserList();
-        new User("kaela", "224466");
-        new User("gazel", "664422");
-        new User("yopi", "242466");
+        //User.clearUserList();
+        // new User("kaela", "224466");
+        // new User("gazel", "664422");
+        // new User("yopi", "242466");
         User.showUserList();
         
         
@@ -299,6 +335,7 @@ public class LoginForm extends javax.swing.JFrame {
             }
         });
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
